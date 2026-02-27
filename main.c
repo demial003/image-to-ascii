@@ -2,14 +2,23 @@
 #include <string.h>
 #define STB_IMAGE_IMPLEMENTATION
 #define STB_IMAGE_WRITE_IMPLEMENTATION
+#define STB_IMAGE_RESIZE_IMPLEMENTATION
 #include "stb_image.h"
+#include "stb_image_resize.h"
 #include "stb_image_write.h"
 
 int main(void) {
   int x, y, n;
-  unsigned char *data = stbi_load("triangle.png", &x, &y, &n, 0);
-  unsigned char new_data[x * y];
+  unsigned char *data = stbi_load("arch.png", &x, &y, &n, 0);
+  unsigned char *new_data = malloc(300);
+  unsigned char *final_data = malloc(100);
+  int err = stbir_resize_uint8(data, x, y, 0, new_data, 10, 10, 0, n);
   if (data == NULL) {
+    fprintf(stderr, "failed to open image");
+    exit(EXIT_FAILURE);
+  }
+
+  if (err != 1) {
     fprintf(stderr, "failed to open image");
     exit(EXIT_FAILURE);
   }
@@ -21,16 +30,16 @@ int main(void) {
   for (int i = 0; i < len; i++) {
     stuff[i] = chars[i];
   }
-  printf("%c\n", chars[3]);
   printf("width: %d height: %d componenets %d\n", x, y, n);
-  for (int i = 0; i < y * x * n; i++) {
-    if (n % 3 == 0) {
-      // unsigned char newColor = (data[i - 2] + data[i - 1] + data[i]) / 3;
-      // data[i] += 65;
-    }
+  int j = 0;
+  for (int i = n; i < 300; i += n) {
+    final_data[j] = data[i - 3] + 65;
+    j++;
   }
-  stbi_write_png("triangle2.png", x, y, n, data, x * n);
+  stbi_write_png("arch2.png", 10, 10, 1, final_data, 10);
   stbi_image_free(data);
+  free(new_data);
+  free(final_data);
 }
 
 /*
