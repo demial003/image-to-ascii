@@ -1,5 +1,8 @@
 # image to ascii converter
-** mvp **
-- take image in any format and return asciii art of it
-- try to optimize it to run a bit faster since compilation times is kinda slow
-- side project of low prio
+## current features
+- accepts image of any size and prints in text to terminal
+## in development
+- invert brightness 
+- implement user interface
+- print results to a floating window
+- print in full color

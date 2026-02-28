@@ -9,10 +9,10 @@
 
 int main(void) {
   int initial_width, initial_height, componenets;
-  unsigned char *data = stbi_load("triangle.png", &initial_width,
-                                  &initial_height, &componenets, 0);
-  int scaled_width = initial_width / 31;
-  int scaled_height = initial_height / 31;
+  unsigned char *data =
+      stbi_load("arch.png", &initial_width, &initial_height, &componenets, 0);
+  int scaled_width = initial_width / 10;
+  int scaled_height = initial_height / 10;
   unsigned char *scaled_data =
       malloc(scaled_width * scaled_height * componenets);
   unsigned char *final_data = malloc(scaled_width * scaled_height);
@@ -40,17 +40,24 @@ int main(void) {
     final_data[j] =
         (scaled_data[i - 3] + scaled_data[i - 2] + scaled_data[i]) / 3;
     int idx = (final_data[j] >> 2);
+    printf("%d ", idx);
     output[j] = stuff[idx];
+    if (idx < 25) {
+      output[j] = ' ';
+    } else {
+      output[j] = stuff[idx];
+    }
     j++;
   }
+  printf("\n");
   for (int i = 0; i < scaled_width * scaled_height; i++) {
     printf("%c", output[i]);
     printf("%c", output[i]);
-    // printf("%c", output[i]);
     if (i % scaled_width == 0) {
       printf("\n");
     }
   }
+  printf("\n");
   stbi_image_free(data);
   free(output);
   free(scaled_data);
