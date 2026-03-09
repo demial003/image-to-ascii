@@ -1,3 +1,4 @@
+#pragma GCC diagnostic ignored "-Wall"
 /* stb_image_resize - v0.90 - public domain image resizing
    by Jorge L Rodriguez (@VinoBS) - 2014
    http://github.com/nothings/stb

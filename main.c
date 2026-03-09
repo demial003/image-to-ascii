@@ -31,23 +31,30 @@ unsigned luminosity_rgb(unsigned char *data, int index) {
 
   return r_new + g_new + b_new;
 }
-int main(void) {
+int main(int argc, char **argv) {
+  if (argc < 2) {
+    fprintf(stderr, "invalid arguments\n");
+    exit(EXIT_FAILURE);
+  }
   int initial_width, initial_height, components;
-  unsigned char *data = stbi_load("triangle.png", &initial_width,
-                                  &initial_height, &components, 0);
-  int scaled_width = initial_width / 10 + 1;
-  int scaled_height = initial_height / 10 + 1;
+  unsigned char *data =
+      stbi_load(argv[1], &initial_width, &initial_height, &components, 0);
+  int scaled_width = initial_width / 10;
+  int scaled_height = initial_height / 10;
   unsigned char *scaled_data =
       malloc(scaled_width * scaled_height * components);
-  unsigned char *final_data = malloc(scaled_width * scaled_height);
   int err =
       stbir_resize_uint8(data, initial_width, initial_height, 0, scaled_data,
                          scaled_width, scaled_height, 0, components);
   if (data == NULL) {
-    fprintf(stderr, "failed to open image");
+    fprintf(stderr, "failed to open image\n");
     exit(EXIT_FAILURE);
   }
 
+  if (err < 0) {
+    fprintf(stderr, "failed to resize image\n");
+    exit(EXIT_FAILURE);
+  }
   char *chars =
       "`^\",:;Il!i~+_-?][}{1)(|\\/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@";
   int len = strlen(chars);
@@ -59,27 +66,19 @@ int main(void) {
   printf("width: %d height: %d components %d\n", scaled_width, scaled_height,
          components);
 
-  int j = 0;
-  char *output = malloc(scaled_width * scaled_height);
   for (int i = 0; i < scaled_width * scaled_height; i++) {
     int pixel_pos = i * components;
-    final_data[j] = min_max_rgb(scaled_data, pixel_pos);
-
-    int idx = (final_data[j] >> 2);
+    int lightness_value = min_max_rgb(scaled_data, pixel_pos);
+    int idx = lightness_value >> 2;
     printf("%c%c", stuff[idx], stuff[idx]);
-
     if ((i + 1) % scaled_width == 0) {
       printf("\n");
     }
-
-    ++j;
   }
 
   printf("\n");
   stbi_image_free(data);
-  free(output);
   free(scaled_data);
-  free(final_data);
 }
 
 /*

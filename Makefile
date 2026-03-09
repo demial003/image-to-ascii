@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS= -lm -std=c99  -g -fsanitize=address
+CFLAGS= -lm -Wall -std=c99 -g -fsanitize=address
 SOURCES=$(wildcard *.c)
 TARGET=main
 
